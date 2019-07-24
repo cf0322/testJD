@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JS-对象的方法</title>
+    <style>
+      li{width:100px;height:100px;float:left;background:#ccc;margin:10px;list-style:none;;}
+    </style>
+</head>
+<body>
+    <li></li><li class="box"></li><li></li><li></li>
+    <li></li><li></li><li></li><li></li>
+    <input placeholder="Date" class="textbox-n" type="text" onfocus="(this.type='date')"  id="date">
+</body>
+</html>
+<script>
+// Math 方法
+var a= Math.pow(3,10)    // x的y次幂
+var b= Math.sqrt(4)      // 开平方
+var c= Math.PI           // 圆周率
+var d= Math.min(1,2,3)   // 最小值
+var e= Math.max(4,5,6)   // 最大值
+var f= Math.ceil(10.4)   // 向上取整
+var g= Math.floor(10.9)  // 向下取整 等同于parseInt() 性能比它好
+var h= Math.round(10.4)  // 四舍五入取整
+var i= Math.abs(-5)      // 绝对值 5
+var j= Math.random()     // 随机数     [0,1)    0 <= random < 1
+function random(n,m){
+    return Math.floor(Math.random() * (m-n)+n);
+}
+
+// array 方法
+var array=[0,1,2,3,4],arr=['数组','的','常用','方法'],oldArr=[null,false,true]
+var A= array.concat(arr,oldArr)    // concat连接数组 返回一个新的数组
+var B= array.reverse()          // 翻转数组
+var C= array.push(5)            // 在数组最后添加元素(可以是多个) =array.splice(array.length,0,5)
+var D= array.pop()              // 删除数组的最后一个元素  =array.splice(array.length-1,1)
+var E= array.unshift(0)         // 在数组最前添加元素(可以是多个)  =array.splice(0,0,0)
+var F= array.shift()            // 删除数组的第一个元素    =array.splice(0,1)
+var G= array.toString()         // 转为字符串 逗号隔开
+var H= array.join("_")          // 转为字符串 指定符号隔开
+
+var I= array.sort()             // 给数组排序 默认按照字符排序
+var J= array.sort(sortNum)
+function sortNum(n1,n2){
+     return n2 - n1;  // 降序
+}
+
+var K= array.splice(0,array.length);        // 万能方法 splice(a,b,c) a:删除元素下标 b:删除个数 c:替换元素(可选参数)
+var L= array.indexOf()          // 数组查找元素下标 支持IE7+
+
+var arrays=[1,2,3,44,42,5,51,65,6,56,7]
+for(var i=0;i<=arrays.length;i++){
+    if(arrays[i] % 2 == 0){
+        arrays.splice(i,1);
+        i--;      // 遍历中 删除一个元素需要向前重复遍历一次
+    }
+}
+function findArr(arr,value){ // 数组查找某个元素
+    for(var i=0;i<=arr.length;i++){
+        if(arr[i]==value){
+            return true;
+        }
+    }
+    return false;
+}
+function distinct(arr){ // 数组去重
+    var arr2=[];
+    for(var i=0;i<arr.length;i++){
+        if(!findArr(arr2,arr[i])){
+            arr2.push(arr[i]);
+        }
+    }
+    return arr2;
+}
+function bubleSort(arr){ // 冒泡排序
+    for(var i=0;i<=arr.length;i++){
+        for(var j=i+1;j<arr.length;j++){
+            if(arr[i]>arr[j]){
+                var temp=arr[i];
+                arr[i]=arr[j];
+                arr[j]=temp;
+            }
+        }
+    }
+    return arr;
+}
+
+// 字符串方法     
+var str='we are family';
+var str1= str.charAt(5)    // 根据下标获取字符 包含空格  str[5]支持高版本IE7以上  aImg.src="img/"+image.charAt(i)+".png"
+var str2= str.indexOf('f')     // 查找元素下标  数组低版本不支持
+var str3= str.lastIndexOf('i')    // 从右往左查下标 
+var str4= str.toLowerCase()       // 全部小写
+var str5= str.toUpperCase()       // 全部大写
+var str6= str.substring(3,5)       // 截取字符串  (开始,结束位置)    ar
+var str7= str.substr(3,5)          // 截取字符串  (开始,截取长度)    are f
+var str8= str.split(' ')      // 根据条件将字符串分割为数组
+
+// 0x4e00~~0x9fa5 unicode编码  String.fromCharCode(0x4e00)
+// navigator.userAgent 查找浏览器内核   chrome,safari: webkit   firfox: Gecko  IE: trident
+for(var i='0x4e00';i<='0x9fa5';i++){
+       String.fromCharCode(i);
+}
+
+// 时间对象
+var date= new Date();              // 构造创建时间对象
+
+var year= date.getFullYear()       // 获取年份
+var month= date.getMonth()         // 获取月份(从0开始)
+var week= date.getDay()            // 获取星期
+var day= date.getDate()            // 获取日
+var hour= date.getHours()          // 获取小时
+var minutes= date.getMinutes()     // 获取分钟
+var seconds= date.getSeconds()     // 获取秒数
+var minSec= date.getMilliseconds() // 获取毫秒数
+var times= date.getTime()          // 获取时间戳(毫秒) =getMilliseconds() (1970-01-01 ~ 现在)
+
+date.setFullYear()         // 设置年月日
+date.setHours()            // 设置时分秒
+date.setTime()             // 设置时间戳
+
+var aMon = prompt('请输入月份!');
+date.setMonth(aMon);
+date.setDate(0)      // 设置为0的话会跳转的上个月最后一天 负数递减 正数递增
+date.getDate();
+
+window.onload=function(){
+    var aLi = document.getElementsByTagName('li');
+    for(var i=0;i<aLi.length;i++){
+        aLi[i].style.backgroundColor='rgb('+random(0,256)+','+random(0,256)+','+random(0,256)+')';
+    }
+
+
+    function checkPath(path){   // 返回路径后缀
+        var index=path.lastIndexOf('.')
+        var str=path.substring(index+1);
+        return str;
+    }
+    
+    function json2url (url) {  // 路径字符串转为json对象
+       var json={}
+       var arr = url.split('&');
+       for(var i=0;i<arr.length;i++){
+           var newArr=arr[i].split('=');
+           json[newArr[0]]=newArr[1];
+       } 
+       return json;
+    }
+
+     function strUpperCase (str) {  // 字符串首字母大写
+         var arr=str.split(' ');
+         for(var i=0;i<arr.length;i++){
+             arr[i]=arr[i].charAt(0).toUpperCase() + arr[i].substring(1);
+         }
+         arr.join(' ');
+         return arr;
+     }
+     
+     function getByClass(className){   // 根据类名获取元素
+         if(document.getElementsByClassName){   // 高版本
+             return document.getElementsByClassName(className);
+         }else{  // 低版本
+             var aEle =document.getElementsByTagName('*')   // 获取页面所有元素
+             var arr= [];
+             for(var i=0;i<aEle.length;i++){
+                 var newArr=aEle[i].className.split(' ');
+                 if(findArr(newArr,className)){
+                     arr.push(aEle[i]);
+                 }
+             }
+             return arr;
+         }
+     }
+      function addClass(obj,className){         // 添加类名
+          var arr=obj.className.split(' ');
+          if(findArr(arr,className)==false){
+              obj.className=obj.className+' '+className
+          }   
+      }
+      function removeClass(obj,className){
+          var  arr=obj.className.split(' ');
+          for(var i=0;i<arr.length;i++){
+              if(arr[i]==calssName){
+                arr.splice(i,1);
+                i--;
+              }
+          }
+          obj.className=arr.join(' ')
+      }
+}
+</script>

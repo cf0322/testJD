@@ -1,0 +1,1399 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/elsHeader.jsp"%>
+<script type="text/javascript" src="<%=basePath%>extend/valid.js?version=<%=version%>"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jsLib/webuploader/css/webuploader.css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/jsLib/webuploader/js/webuploader.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jsLib/flexpaper/flexpaper_flash.js"></script>
+<script type="text/javascript" src="<%=basePath %>elsOss/upload3.js"></script>
+<script type="text/javascript" src="<%=basePath %>extend/dialog/dist/dialog-plus.js?version=<%=version%>"></script> <!-- 如果需要支持 iframe 内容与拖拽，请引用加强版 dialog-plus.js  -->
+<script type="text/javascript" src="<%=basePath %>elsOss/lib/plupload-2.1.2/js/plupload.full.min.js"></script>
+<body>
+<style>
+.w_260{width:260px !important;}
+#logoUpload{position:relative;z-index:2;}
+#logoImage{border:solid 0.5px #CCC;width:230px;height:170px;position:absolute;left:428px;top:222px;z-index:1;}
+</style>
+<div class="pos-relative public-wrap">		
+	<div class="box-wrap pos-relative bg-common margin-t5">
+		<span class="dis-in-b pos-absolute box-tip bg-common"><i18n:I18n key="i18n_common_title_baseoperation" defaultValue="基本操作" /></span>
+		<div class="common-box-line tool-bg">
+            <%-- <button id="addBtn" class="button-wrap"><i18n:I18n key="i18n_button_add" defaultValue="新增" /></button>
+            <button id="delBtn" class="button-wrap"> <i18n:I18n key="i18n_label_delete" defaultValue="删除" /></button> --%>
+			<button id="saveBtn" class="button-wrap"><i18n:I18n key="i18n_button_save" defaultValue="保存" /></button>
+			<%-- <button id="updateBtn" class="button-wrap"><i18n:I18n key="i18n_label_GetUpdates" defaultValue="获取更新" /></button>
+			<button id="copyBtn" class="button-wrap"><i18n:I18n key="i18n_label_CopyLine" defaultValue="复制一行" /></button> --%>
+			<button class="button-wrap add"><i18n:I18n key="" defaultValue="新增一行" /></button>
+           	<button class="button-wrap del"><i18n:I18n key="" defaultValue="删除一行" /></button>
+			<button class="button-wrap copy"><i18n:I18n key="" defaultValue="复制一行" /></button>
+		</div>
+	</div>
+	<div class="box-wrap pos-relative bg-common">
+		<span class="dis-in-b pos-absolute box-tip bg-common"><i18n:I18n key="i18n_label_enterprise_info" defaultValue="企业基本信息" /></span>
+		<div class="common-box-line" id="messesgeForm">
+			<div class="" id="add-enq-sheet">
+				<ul>
+					<li><a href="#edit-line-account"><i18n:I18n key="i18n_common_title_baseinformation" defaultValue="企业基本信息" /></a></li>
+					<li onclick="resizeEvt()"><a href="#bankInfo"><i18n:I18n key="" defaultValue="银行资料" /></a></li>
+					<<%-- li onclick="resizeEvt()"><a href="#communicationInfo"><i18n:I18n key="i18n_label_AddressInformation" defaultValue="地址资料" /></a></li> --%>
+					<li onclick="resizeEvt()" id="certificateInfoTable"><a href="#certificateInfo"><i18n:I18n key="" defaultValue="资质认证" /></a></li>
+					<li onclick="resizeEvt()"><a href="#contactInfo"><i18n:I18n key="" defaultValue="通讯信息" /></a></li>
+				</ul>
+				
+				<!-- 结构化数据 -->
+				<!-- 企业基本信息 -->
+					<div id="edit-line-account">
+					<table id="enterpriseInfo" cellspacing="5" style="border-spacing:5px;border-collapse: separate;">
+			    	<tbody>
+			    		<tr>
+			    			<td colspan="5" align="right" style="width: 130px; max-width: 155px;"><i18n:I18n key="i18n_enterprise_elsAccount" defaultValue="ELS企业号" />：</td>
+			    			<td colspan="5" align="left"><input id="elsAccount" name="elsAccount" type="text" readonly = "readonly"></td>
+			    			<td colspan="5" align="right">&nbsp;&nbsp;<i18n:I18n key="" defaultValue="准入状态" />：</td>
+			    			<td colspan="5" align="left"><input id="fbk42" name="fbk42" readonly="readonly" type="text" /></td>
+			    			<td colspan="5" align="left"><input id="fbk2" name="fbk2" type="hidden" /></td>
+			    		</tr>
+			    		<tr>
+			    			<td colspan="5" align="right"><i18n:I18n key="i18n_enterprise_fullName" defaultValue="企业全称" />：<span style="color: red;">*</span></td>
+			    			<td colspan="25" align="left"><input id="fullName" name="fullName" type="text" style="width: 520px; max-width: 520px;"/></td>
+			    		</tr>
+			    		<tr>
+			    			<td colspan="5" align="right"><i18n:I18n key="i18n_enterprise_shortName" defaultValue="企业简称" />：<span style="color: red;">*</span></td>
+			    			<td colspan="25" align="left"><input id="shortName" name="shortName" type="text" maxlength="10" style="width: 520px; max-width: 520px;"/></td>
+			    		</tr>
+			    		<tr>
+			    			<td colspan="5" align="right"><i18n:I18n key="i18n_enterprise_nature" defaultValue="企业性质" />：</td>
+			    			<td colspan="5" align="left"><input id="nature" name="nature" type="text" /></td>
+			    			<td colspan="5" align="right"><i18n:I18n key="" defaultValue="企业规模" />：</td>
+			    			<td colspan="15" align="left"><input id="fbk18" name="fbk18" type="text" /></td>
+			    		</tr>
+			    		<tr>
+			    		    <td colspan="5" align="right">固话：</td>
+			    			<td colspan="5" align="left"><input id="fbk34" name="fbk34" type="text"></td>
+			    			<td colspan="5" align="right"><i18n:I18n key="i18n_enterprise_fax" defaultValue="传真" />：</td>
+			    			<td colspan="5" align="left"><input id="fax" name="fax" type="text" /></td>
+			    		</tr>
+			    		<tr>
+			    			<td colspan="5" align="right"><i18n:I18n key="i18n_enterprise_industry" defaultValue="行业大类" />：</td>
+			    			<td colspan="5" align="left"> <select class="w_260"  id="industry" name="industry"> </select></td>
+			    			<td colspan="6" align="right">
+			    				<button id="logoUpload" class="button-wrap uploadFileBtn"><i18n:I18n key="i18n_enterprise_logo" defaultValue="企业LOGO上传" /></button>
+			    				<input id="logo" name="logo" type="hidden" />
+			    			</td>
+			    			<!-- LOGO图 -->
+			    			<img id = "logoImage" src="<%=basePath%>images/starting_logo.gif"/>
+			    		</tr>
+			    		<tr>
+			    			<td colspan="5" align="right"><i18n:I18n key="i18n_enterprise_secondIndustry" defaultValue="行业中类" />：</td>
+			    			<td colspan="5" align="left"><select class="w_260" id=secondIndustry name="secondIndustry">
+									<option value="">ALL_<i18n:I18n defaultValue="行业细类" key="i18n_enterprise_secondIndustry"/></option>
+							</select>
+			    			</td>
+			    		</tr>
+			    		<tr>
+			    			<td colspan="5" align="right"><i18n:I18n key="i18n_enterprise_countryCode" defaultValue="国家" />：</td>
+			    			<td colspan="5" align="left">
+							    <div id="country"  els-dp class="w_260"></div>
+							    <input type = "hidden"  id = "countryCode" name = "countryCode"/>
+			    			</td>
+			    		</tr>
+			    		<tr>
+			    			<td colspan="5" align="right"><i18n:I18n key="i18n_enterprise_province" defaultValue="省份" />：</td>
+			    			<td colspan="5" align="left">
+							    <div id="province"  els-dp class="w_260"></div>
+							      <input type = "hidden"  id = "provinceCode" name = "province"/>
+			    			</td>
+			    		</tr>
+			    		<tr>
+			    			<td colspan="5" align="right"><i18n:I18n key="i18n_enterprise_city" defaultValue="城市" />：</td>
+			    			<td colspan="5" align="left">
+							    <div id="city" name = "city"  els-dp class="w_260"></div>
+							      <input type = "hidden"  id = "cityCode" name = "city"/>
+			    			</td>
+			    		</tr>
+			    		<tr id="counts" style="display: none">
+			    			<td colspan="5" align="right"><i18n:I18n key="" defaultValue="供应商分类" />：</td>
+			    			<td colspan="25" align="left">
+			    			<input id="fbk46" name="fbk46" type="text" readonly="readonly"  class="lh30 marClear w_260" />
+			    			<!-- <input id="secondIndustry" name="secondIndustry" type="text" /> -->
+			    			</td>
+			    		</tr>
+			    		<tr id="count">
+			    			<td colspan="5" align="right"><i18n:I18n key="" defaultValue="供应商分类" />：</td>
+			    			<td colspan="25" align="left">
+			    			<input id="fbk45" name="fbk45" type="text" readonly="readonly"  class="lh30 marClear w_260" />
+				            <img class="dis-in-b" src="../icon/min/search_gray.png" style="width: 17px; height: 17px;position:relative;right:25px;top:0;cursor: pointer;" id="queryProject2" title='<i18n:I18n key="" defaultValue="查找供应商分类" />' />
+			    			<!-- <input id="secondIndustry" name="secondIndustry" type="text" /> -->
+			    			</td>
+			    		</tr>
+			    		<tr>
+			    			<td colspan="5" align="right"><i18n:I18n key="i18n_enterprise_address" defaultValue="详细地址" />：</td>
+			    			<td colspan="25" align="left"><input id="address" name="address" type="text" style="width:520px; max-width: 520px;"/></td>
+			    		</tr>
+			    		<tr>
+			    			<td colspan="5" align="right"><i18n:I18n key="" defaultValue="增值税号" />：</td>
+			    			<td colspan="25" align="left"><input id="fbk49" name="fbk49" type="text" style="width:520px; max-width: 520px;"/></td>
+			    		</tr>
+			    		<tr>
+			    			<td colspan="5" align="right">&nbsp;&nbsp;<i18n:I18n key="" defaultValue="主营产品及业绩" />：</td>
+			    			<td colspan="15" align="left">
+			    			<textarea id="website" name="website" style="width: 520px;height:50px; max-width: 520px;resize: none; margin: 0px;" ></textarea>
+			    		</tr>
+			    		<tr>
+			    			<td colspan="5" align="right">&nbsp;&nbsp;<i18n:I18n key="i18n_enterprise_industryDetail" defaultValue="营业范围" />：</td>
+			    			<td colspan="15" align="left">
+			    			<textarea id="industryDetail" name="industryDetail" style="width: 520px;height:50px;  max-width: 520px;resize: none; margin: 0px;" ></textarea></td>
+			    		</tr>
+
+			    		<tr id="sTR">
+			    			<input id="contactElsAccount" name="contactInfoVO[elsAccount]" type="hidden" />
+			    			<input name="contactInfoVO[id]" type="hidden" />
+
+			    		</tr>
+			    	</tbody>
+			    </table>
+				</div>
+				<div id="bankInfo">
+					
+				    <!-- 银行资料 -->
+				   <div class="tab-wrap"> <table id="table-bankInfo"></table> </div>
+				</div>
+				<!-- <div id="communicationInfo">
+					
+					地址资料
+					<div class="tab-wrap"> <table id="table-communicationInfo"></table> </div>
+				</div> -->
+				<div id="certificateInfo">
+				
+					<!-- 认证资料 -->
+					<div class="tab-wrap"> <table id="table-certificateInfo"></table> </div>
+				</div>
+				<div id="contactInfo">
+					
+					<!-- 联系人资料 -->
+					<div class="tab-wrap"> <table id="table-contactInfo"></table> </div>
+				</div>
+			</div>
+		
+		</div>
+	
+	</div>
+</div>
+
+
+
+
+<div class="fixed-dialog" id="addFileDialogs">
+           <div class="dialog-tip bg-common" style="width: 270px;height: auto; margin-left: -131px;">
+               <div class="dialog-close-btn" id="dialogFileCloses"></div>
+               <div class="tip-head tip-head-pad">
+                   <!-- <img class="icon" src="../../icon/els.PNG" /> -->
+                   <span class="dialogTitle"><i18n:I18n key="i18n_select_the_file" defaultValue="选择文件" /></span>
+               </div>
+               <div class="">
+                   <div class="box-wrap pos-relative bg-common" style="padding-bottom: 10px;">
+                       <div class="common-box-line">
+                           <div class="input-and-tip"><span><i18n:I18n key="i18n_common_label_filename" defaultValue="文件名称" />：</span><input id="fileNames" name="fileNames" type="text" class="lh30 w100 marClear"/></div>
+	                       <div class="input-and-tip"><span><i18n:I18n key="i18n_common_label_filepath" defaultValue="文件路径" />：</span><input id="filePaths" name="filePaths" type="text" class="lh30 w100 marClear"/></div>
+	                       <div class="input-and-tip text-right">
+		                       <span><div id="btnFileUploads" class="btn btnUpload"><i18n:I18n key="i18n_select_the_file" defaultValue="选择文件" /></div></span>
+		                       <input id="fileType" name="fileType" type="hidden" />
+	                       </div>
+	                       <div class="btnGroupWrap text-center">
+	                          <button id="addFileBtnOKs" class="btnWrap button-wrap "><i18n:I18n key="i18n_common_button_ok" defaultValue="确定" /></button>
+		                      <button id="addFileBtnCancels" class="btnWrap button-wrap"><i18n:I18n key="i18n_common_button_cancel" defaultValue="取消" /></button>
+	                       </div>
+                       </div>
+                   </div>
+               </div>
+        </div>
+</div>
+<!-- 上传文件dialog -->
+<div class="fixed-dialog" id="addFileDialog">
+           <div class="dialog-tip bg-common" style="width: 290px;height: auto;">
+               <div class="dialog-close-btn" id="dialogFileClose"></div>
+               <div class="tip-head">
+                   <img class="icon" src="../icon/els.PNG" />
+                   <span class="dialogTitle"><i18n:I18n key="i18n_select_the_file" defaultValue="选择文件" /></span>
+               </div>
+               <div class="">
+                   <div class="box-wrap pos-relative bg-common" style="padding-bottom: 10px;">
+                       <div class="common-box-line">
+                           <div class="input-and-tip"><span><i18n:I18n key="i18n_common_label_filename" defaultValue="文件名称" />：</span><input id="fileName" name="fileName" type="text"/></div>
+	                       <div class="input-and-tip" style="display: none"><span><i18n:I18n key="i18n_common_label_filepath" defaultValue="文件路径" />：</span><input id="filePath" name="filePath" type="text" /></div>
+	                       <div class="progress"><div id="progress" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="1" aria-valuemax="100" style="min-width: 2em;width: 0%;">0%</div></div>
+	                       <div class="mt-20 text-center">
+	                          <button id="addFileBtnOK" class="button-wrap "><i18n:I18n key="i18n_enquiry_label_upload" defaultValue="开始上传" /></button>
+		                      <button id="btnFileUpload" class="button-wrap"><i18n:I18n key="i18n_select_the_file" defaultValue="选择文件" /></button>
+	                       </div>
+                       </div>
+                   </div>
+               </div>
+        </div
+</div>
+
+<script type="text/javascript">
+var tabs  = $("#add-enq-sheet").tabs();	
+
+var languageCode = languageCode == 'en' ? 'en' : 'zh-cn';
+$("#fbk19").on("focus",function(){
+    WdatePicker({
+        dateFmt:'yyyy-MM-dd',
+        lang: languageCode
+    });
+})
+
+function initEnterpriseExtend(){
+	
+	$.ajax({
+		url : "<%=basePath%>rest/AccountService/findEnterpriseExtend/"+elsAccount,
+		type : "GET",
+		success: function(data){
+			var lstCommunicationInfo = JSON.parse(data.communicationInfo || "[]");
+			Array.isArray( lstCommunicationInfo ) ? communicationGrid.load(lstCommunicationInfo) : communicationGrid.load([lstCommunicationInfo]);
+					
+			var lstBank = JSON.parse(data.bankInfo || "[]");
+			Array.isArray( lstBank ) ? bankGrid.load(lstBank) : bankGrid.load([lstBank]);
+			
+			var certificateInfosr=null;
+			var certificate=data.certificateInfo;
+			data.certificateInfo=[];
+			var fbk1=data.fbk1;
+			var obj = JSON.parse(certificate);
+			for(var i=0;i<obj.length;i++){
+				var fbk3=obj[i].fbk3
+				if(fbk1==fbk3){
+					/* data.certificateInfo=obj[i] */
+			     data.certificateInfo.push(obj[i])
+				}
+				var fbk5=obj[i].fbk5
+				if(fbk5!=elsAccount){
+					obj[i].fbk5=elsAccount
+				}
+			}
+			//var str = data.certificateInfo.substring(0, data.certificateInfo.lastIndexOf(','));
+			//data.certificateInfo=certificateInfosr;
+			var lstCertificateInfo = data.certificateInfo;
+			Array.isArray( lstCertificateInfo ) ? certificateGrid.load(lstCertificateInfo) : certificateGrid.load([lstCertificateInfo]);
+			var lstContactInfo = JSON.parse(data.contactInfo || "[]");
+			Array.isArray( lstContactInfo ) ? contactGrid.load(lstContactInfo) : contactGrid.load([lstContactInfo]) ;
+			initCertiCol();
+		}
+	})
+}
+var bank_cols = [{ title:"<i18n:I18n defaultValue="银行国家" key=""/>", name:"countryName" , width:150, align:"center",renderer:initBankColumn},
+	{ title:"<i18n:I18n defaultValue="开户银行" key=""/>", name:"bankName" , width:300, align:"center", renderer:initBankColumn},
+	{ title:"<i18n:I18n defaultValue="账号" key=""/><sub style='color:red;'>*</sub>", name:"bankAccount" , width:300, align:"center", renderer:initBankColumn},
+	{ title:"<i18n:I18n defaultValue="开户行地址" key=""/>", name:"bankBranchAddress",  width: 100, align: "center", renderer:initBankColumn},
+	{ title:"<i18n:I18n defaultValue="开户行行号" key=""/><sub style='color:red'>*</sub>", name:"bankAccountName" , width:200, align:"center", renderer:initBankColumn},
+	{ title:"<i18n:I18n defaultValue="结算方式" key=""/><sub style='color:red'>*</sub>", name:"fbk11" , width:200, align:"center", renderer:initBankColumn},
+	{ title:"<i18n:I18n defaultValue="来源ELS号" key="i18n_label_ELSofResource"/>", name:"fbk5",  width: 100, align: "center", renderer: initBankColumn,hidden:true},
+	{ title:"<i18n:I18n defaultValue="来源公司名称" key="i18n_label_EnterpriseNameofResource"/>", name:"fbk7",  width: 100, align: "center", renderer: initBankColumn,hidden:true},
+	{ title:"<i18n:I18n defaultValue="是否公开" key="i18n_label_public"/>", name:"fbk6",  width: 90, align: "center", renderer: initBankColumn},
+	];
+var bankGrid = $('#table-bankInfo').mmGrid({
+	    cols: bank_cols,
+	    items : [],
+	    height:280,
+	    checkCol : true,
+	    loadingText: '<i18n:I18n key="i18n_common_mmgrid_loadingtext" defaultValue="正在载入" />',
+	    noDataText: '<i18n:I18n key="i18n_common_mmgrid_nodatatext" defaultValue="暂无数据" />'
+});
+
+function initBankColumn(val, item, index){
+	if(!val) val = "";
+	if(this.name == "fbk6"){
+		var options = "<option value='Y' selected><i18n:I18n key="i18n_common_yes" defaultValue="是" /></option><option value='N'><i18n:I18n key="i18n_common_no" defaultValue="否" /></option>" 	
+		if(val == "N"){
+			options = "<option value='Y'><i18n:I18n key="i18n_common_yes" defaultValue="是" /></option><option value='N' selected><i18n:I18n key="i18n_common_no" defaultValue="否" /></option>" 			
+		}
+		return "<select name='"+this.name+"' "+(item.fbk5 == elsAccount ? '' : 'disabled')+">"+options+"</select>";
+	}
+	if(this.name == "fbk5" || this.name == "fbk7"){
+		 return "<input type='text' name='"+this.name+"' value='"+val+"' readonly='readonly'>";
+	}
+	if(this.name == "fbk11"){
+		//_input = "<input type='text' readonly='readonly' onclick='paymentList("+index+")' name='"+this.name+"' value='"+val+"'>";
+		return "<input type='text' readonly='readonly' onclick='paymentList("+index+")' name='"+this.name+"' value='"+val+"'>"
+	}
+	if(this.name == "countryName"){
+		//_input = "<input type='text' readonly='readonly' onclick='paymentList("+index+")' name='"+this.name+"' value='"+val+"'>";
+		return "<input type='text' readonly='readonly' onclick='countryName("+index+")' name='"+this.name+"' value='"+val+"'>"
+	}
+	if(this.name == "bankAccount"){
+		 return "<input type='text' class='myBankAccount' name='"+this.name+"' value='"+val+"'>";
+	}
+	var _input  = "<input type='text' name='"+this.name+"' value='"+val+"' readonly='readonly'>";
+	if(item.fbk5 == elsAccount){
+		_input = "<input type='text' name='"+this.name+"' value='"+val+"'>";
+	}
+	return _input;
+}
+
+bankGrid.on("blur change","input, select",function(){
+	if($(event.target).is("[name='fbk6']")){
+		$(this).closest("tr").data("item")[this.name]  = $(this).find("option:selected").val()
+		return false;
+	}
+	$(this).closest("tr").data("item")[this.name] = this.value;
+})
+
+
+var contact_cols =  [
+    		        ///{title:'<i18n:I18n key="i18n_label_function" defaultValue="职能" /><sub style="color:red">*</sub>',   name:'contactRole', width: 100, align: 'center', renderer: initContactCol},
+    		        {title:'<i18n:I18n key="i18n_label_Duty" defaultValue="职务" /><sub style="color:red">*</sub>',   name:'contactPosition' , width: 100, align: 'center',renderer: initContactCol},
+    		        {title:'<i18n:I18n key="i18n_common_title_username" defaultValue="姓名" /><sub style="color:red">*</sub>',   name:'contactName', width: 150, align: 'center',renderer: initContactCol},
+    		        {title:'<i18n:I18n key="i18n_account_title_phonenumber" defaultValue="手机号" /><sub style="color:red">*</sub>', name:'mobile' , width: 150, align: 'center',renderer: initContactCol,dataType:'object'},
+    		        {title:'<i18n:I18n key="i18n_personal_email_name" defaultValue="邮箱" /><sub style="color:red">*</sub>',   name:'email' , width: 200, align: 'center' ,renderer: initContactCol},
+    		        {title:'<i18n:I18n key="i18n_label_qq" defaultValue="QQ" /><sub style="color:red">*</sub>',     name:'fbk1', width: 120, align: 'center' ,renderer: initContactCol},
+    		        {title:'<i18n:I18n key="" defaultValue="通讯地址" />',   name:'fbk2' , width: 130, align: 'center' ,renderer: initContactCol},
+    		        {title:'<i18n:I18n key="i18n_label_ELSofResource" defaultValue="来源ELS号" />',   name:'fbk5' , width: 100, align: 'center' ,renderer: initContactCol,hidden:true},
+    		        {title:'<i18n:I18n key="i18n_label_EnterpriseNameofResource" defaultValue="来源公司名称" />',   name:'fbk7' , width: 100, align: 'center' ,renderer: initContactCol,hidden:true},
+    		        {title:'<i18n:I18n key="i18n_label_public" defaultValue="是否公开" />',   name:'fbk6' , width: 90, align: 'center' ,renderer: initContactCol},
+    		        {title:'<i18n:I18n key="i18n_label_remark" defaultValue="备注" />',   name:'fbk3', width: 300, align: 'center' , renderer: initContactCol}];
+    	            
+
+    
+var contactGrid =  $('#table-contactInfo').mmGrid({
+        cols: contact_cols,
+        items : [],
+        height:280,
+        checkCol : true,
+        loadingText: '<i18n:I18n key="i18n_common_mmgrid_loadingtext" defaultValue="正在载入" />',
+        noDataText: '<i18n:I18n key="i18n_common_mmgrid_nodatatext" defaultValue="暂无数据" />'
+});
+
+function initContactCol(val, item, index){
+    //检索展示和新增联系人资料 ****大概吧
+	if(!val) val = "";
+	if(this.name == "mobile"){
+		return "<input type='text' class='SJHM' name='"+this.name+"' value='"+val+"' maxlength=11>"
+	}
+	if(this.name == "fbk1"){
+		return "<input type='text' id='QQHM' class='myFBK1QQ' name='"+this.name+"' value='"+val+"'>"
+	}
+	if(this.name == "fbk6"){
+		var options = "<option value='Y' selected><i18n:I18n key="i18n_common_yes" defaultValue="是" /></option><option value='N'><i18n:I18n key="i18n_common_no" defaultValue="否" /></option>" 	
+		if(val == "N"){
+			options = "<option value='Y'><i18n:I18n key="i18n_common_yes" defaultValue="是" /></option><option value='N' selected><i18n:I18n key="i18n_common_no" defaultValue="否" /></option>" 			
+		}
+		return "<select name='"+this.name+"' "+(item.fbk5 == elsAccount ? '' : 'disabled')+">"+options+"</select>";
+	}
+	if(this.name == "fbk5" || this.name == "fbk7"){
+		 return "<input type='text' name='"+this.name+"' value='"+val+"' readonly='readonly'>";
+	}
+	var _input  = "<input type='text' name='"+this.name+"' value='"+val+"' readonly='readonly'>";
+	if(item.fbk5 == elsAccount){
+		_input = "<input type='text' name='"+this.name+"' value='"+val+"'>";
+	}
+	return _input;
+}
+
+contactGrid.on("blur change","input, select",function(){
+	if($(event.target).is("[name='fbk6']")){
+		$(this).closest("tr").data("item")[this.name]  = $(this).find("option:selected").val()
+		return false;
+	}
+	$(this).closest("tr").data("item")[this.name] = this.value;
+})
+
+var certificate_cols = [{title:'<i18n:I18n key="i18n_label_TypeofCertificate" defaultValue="认证类型"/>',   name:'certificateType'   , width: 130, align: 'center',renderer:initCertiCol},
+	{title:'<i18n:I18n key="" defaultValue="供应商分类名称"/>',   name:'fbk3' , width: 160, align: 'center',hidden:true},
+	{title:'<i18n:I18n key="i18n_label_Certificate" defaultValue="证书编号"/><sub style="color:red">*</sub>',   name:'certificateNumber' , width: 160, align: 'center',renderer:initCertiCol},
+	{title:'<i18n:I18n key="i18n_label_CertificateAuthority" defaultValue="认证机构"/><sub style="color:red">*</sub>', name:'agencyName', width: 200, align: 'center',renderer:initCertiCol},
+	{title:'<i18n:I18n key="i18n_label_CertifiedDate" defaultValue="认证日期"/>',   name:'logtime' ,hidden:true, width: 120, align: 'center' ,renderer:initCertiCol},
+    {title:'<i18n:I18n key="i18n_label_EffectiveDate" defaultValue="证书生效期"/><sub style="color:red">*</sub>', name:'validBeginTime', width: 120, align: 'center' ,renderer:initCertiCol},
+    {title:'<i18n:I18n key="i18n_label_ExpirationDate" defaultValue="证书失效期"/><sub style="color:red">*</sub>', name:'validEndTime'      , width: 120, align: 'center' ,renderer:initCertiCol},
+    {title:'<i18n:I18n key="i18n_label_ELSofResource" defaultValue="来源ELS号"/>',   name:'fbk5' , width: 100, align: 'center',renderer:initCertiCol,hidden:true},
+    {title:'<i18n:I18n key="i18n_label_EnterpriseNameofResource" defaultValue="来源公司名称"/>', name : 'fbk7', width: 120, align : 'center',renderer:initCertiCol,hidden:true},
+    {title:'<i18n:I18n key="i18n_label_public" defaultValue="是否公开"/>',   name:'fbk6' , width: 90, align: 'center',renderer:initCertiCol},
+    {title:'<i18n:I18n key="" defaultValue="附件"/>',   name:'fbk9' , width: 300, align: 'center',renderer:initCertiCol},
+    {title:'<i18n:I18n key="" defaultValue="操作"/>',   name:'fbk8' , width: 300, align: 'center',renderer:initCertiCol},
+    {title:'<i18n:I18n key="i18n_label_remark" defaultValue="备注"/>',   name:'remark' , width: 300, align: 'center',renderer:initCertiCol},];
+var operate = function (val,item,index){
+	return "<a href='#' onclick='queryItem("+item.inventoryRecordNumber+")'>上传</a>"+
+	         "<a href='#' onclick='queryItem("+item.inventoryRecordNumber+")'>下载</a>";
+};
+
+var certificateGrid = $('#table-certificateInfo').mmGrid({
+    cols: certificate_cols,
+    items : [],
+    height:280,
+    checkCol : true,
+    multiSelect:true,
+    loadingText: '<i18n:I18n key="i18n_common_mmgrid_loadingtext" defaultValue="正在载入" />',
+    noDataText: '<i18n:I18n key="i18n_common_mmgrid_nodatatext" defaultValue="暂无数据" />'
+});
+function initCertiCol(val, item, index){
+	if(!val) val = "";
+	if(this.name=="certificateType"){
+		var actionCodeDic=[];
+		 var certificateType = $(this)[0].certificateType;
+		    var sel = '<div><p style="display: none;">'+JSON.stringify(item)+'</p><select onchange="changeTaxCode(this.id, '+index+')" name="certificateType" id="'+certificateType+'_'+index+'"  style="padding: 0;height: 25px;">';
+			$.ajax({
+				url : "<%=basePath%>rest/SupplierMainDataService/queryCertificateInfos",
+			    type :"post",
+			    contentType : "application/json",
+			    data : JSON.stringify({"elsAccount":elsAccount}),
+			    dataType : "json",
+			    async:false,
+			    success : function(data) {
+						actionCodeDic = data.rows;
+			      }
+			});
+		    for(var i = 0 ; i < actionCodeDic.length ; i ++){
+				var row = actionCodeDic[i];
+
+				if(row.certificateType==val)
+				sel += '<option value="'+row.certificateType+'" actionName="'+row.certificateType+'" selected>'+row.certificateType+'</option>';
+				else
+				sel += '<option value="'+row.certificateType+'" actionName="'+row.certificateType+'">'+row.certificateType+'</option>';
+			}
+		    return sel;
+	}
+	if(this.name == "logtime" || this.name == "validBeginTime" || this.name == "validEndTime"){
+		return item.fbk5 == elsAccount ? dateInputFormat(val,"",this.name) : dateInputFormat(val,"R",this.name);
+	}
+	if(this.name == "fbk6"){
+		var options = "<option value='Y' selected><i18n:I18n key="i18n_common_yes" defaultValue="是"/></option><option value='N'><i18n:I18n key="i18n_common_no" defaultValue="否"/></option>" 	
+		if(val == "N"){
+			options = "<option value='Y'><i18n:I18n key="i18n_common_yes" defaultValue="是"/></option><option value='N' selected><i18n:I18n key="i18n_common_no" defaultValue="否"/></option>" 			
+		}
+		return "<select name='"+this.name+"' "+(item.fbk5 == elsAccount ? '' : 'disabled')+">"+options+"</select>";
+	}
+	if(this.name == "fbk8"){
+		var operations =  "<span id='uploadFileBtns' style='color:blue; cursor: pointer;'><i18n:I18n key='' defaultValue='上传' /></span>&nbsp;&nbsp;&nbsp;&nbsp;<span id='updateBtns' style='color:blue; cursor: pointer;'><i18n:I18n key='' defaultValue='下载' /></span>"
+		return operations;
+	}
+	if(this.name=="fbk5"){
+		if(item.fbk5 == "810000"){
+			return "<input type='text' name='"+this.name+"' value='"+elsAccount+"' readonly='readonly'>";
+		}
+	}
+	if(this.name == "fbk5" || this.name == "fbk7"){
+		 return "<input type='text' name='"+this.name+"' value='"+val+"' readonly='readonly'>";
+	}
+	var _input  = "<input type='text' name='"+this.name+"' value='"+val+"' readonly='readonly'>";
+	if(item.fbk5 == elsAccount){
+		_input = "<input type='text' name='"+this.name+"' value='"+val+"'>";
+	}else{
+		_input = "<input type='text' name='"+this.name+"' value='"+val+"'>";
+	}
+	return _input;		
+}
+$('#uploadFileBtns').live("click", function() {
+	 clearAddFileInfo();
+	 var selected = certificateGrid.selectedRows();
+	   if(selected.length == 1){
+			
+		}else{
+			alert("<i18n:I18n key="" defaultValue="请选择一条数据"/>!",2);
+			return;
+		}
+ $("#addFileDialogs").show();
+ initFileUploaders(fileUploader1,this.id);
+});
+$('#updateBtns').live("click", function() {
+	var selected = certificateGrid.selectedRows();
+	 if(selected.length == 1){
+			
+		}else{
+			alert("<i18n:I18n key="" defaultValue="请选择一条数据"/>!",2);
+			return;
+		}
+	var filePaths = selected[0].fbk9;
+	if(filePaths==''||filePaths==null){
+		alert('<i18n:I18n key="i18n_label_attachment" defaultValue="附件为空,不能下载"/>!',2);
+ 		return;
+	}
+	download({filePath : filePaths});
+});
+function clearAddFileInfo(){
+	$("#fileNames").val("");
+	$("#filePaths").val("");
+}
+//初始化控件
+var fileUploader1,certfileUploader
+//文件上载初始化
+function initFileUploaders(fileUploader1,id){
+   //新增表单文件
+   if (!fileUploader1) {
+	  	fileUploader1 = WebUploader.create({
+	  	    swf: '<%=basePath%>jsLib/webuploader/Uploader.swf',
+	  	    auto: true,
+	  	    server: '<%=basePath%>servlet/UploadServlet',
+	  	    pick: '#btnFileUploads',
+	  	    resize: false,
+	  	    
+	  	    formData: {
+		     	elsAccount : elsAccount
+		     } 
+	  	});
+	  	fileUploader1.on( 'uploadAccept', function( obj, response ) {
+	  	   var filePath = response.url;
+	  	   var fileType = filePath.substring(filePath.lastIndexOf('.')+1);
+	  	   var selected = certificateGrid.selectedRows();
+	  	   var indexs = certificateGrid.selectedRowsIndex();
+	  	   selected[0].fbk9=filePath
+	  	   certificateGrid.updateRow($.extend({}, selected[0]),indexs);
+	  	   var test = id.replace('Test','');
+	       $("#filePaths").val(filePath);//页面显示url
+	       //$("#"+id).empty().append('<div style="color: red; width: 48px;">已上传</div>');//上载成功标识
+	       $("#"+test).val(filePath);//提交到数据库url
+	      
+	  	});
+	  	
+	    // 当有文件添加进来的时候
+		fileUploader1.on("fileQueued",function(file){
+			var fileName = file.name;
+			$("#fileNames").val(fileName);
+			$("#fileTypes").val(file.ext);
+		});
+   }
+}
+$("#addFileBtnOKs").click(function(){
+	$("#addFileDialogs").hide();
+});
+//取消按钮事件
+$("#addFileBtnCancels").click(function(){
+	$("#addFileDialogs").hide();//隐藏新增数据表单
+});
+$("#dialogFileCloses").click(function(){
+	$("#addFileDialogs").hide();//隐藏新增数据表单
+});
+/* $("#updateBtns").click(function(){
+	debugger;
+	var selected = certificateGrid.selectedRows();
+	 if(selected.length == 1){
+			
+		}else{
+			alert("<i18n:I18n key="" defaultValue="请选择一条数据"/>!",2);
+			return;
+		}
+	var filePaths = selected[0].fbk9;
+	if(filePaths==''||filePaths==null){
+		alert('<i18n:I18n key="i18n_label_attachment" defaultValue="附件为空,不能下载"/>!',2);
+ 		return;
+	}
+	download({filePath : filePaths});
+ }); */
+certificateGrid.on("blur change","input, select",function(){
+	if($(event.target).is("[name='fbk6']")){
+		$(this).closest("tr").data("item")[this.name]  = $(this).find("option:selected").val()
+		return false;
+	}
+	$(this).closest("tr").data("item")[this.name] = this.value;
+})
+
+var communication_cols =  [
+	               // { title:'地址类型', name:'addressType', width:100, align:"center",renderer: initCommunicationCol},
+	                { title:"<i18n:I18n key="i18n_label_City" defaultValue="所在城市"/>", name:"city" , width:200, align:"center", renderer: initCommunicationCol},
+	                { title:"<i18n:I18n key="i18n_enterprise_address" defaultValue="详细地址"/><sub style='color:red'>*</sub>", name:"detailedAddress" , width:300, align:"center", renderer: initCommunicationCol},
+	                { title:"<i18n:I18n key="i18n_label_PostalCode" defaultValue="邮编"/>", name:"fbk1" , width:120, align:"center", renderer: initCommunicationCol},
+	                { title:"<i18n:I18n key="i18n_label_ELSofResource" defaultValue="来源ELS号" />", name:"fbk5" , width:100, align:"center", renderer: initCommunicationCol},
+	                { title:"<i18n:I18n key="i18n_label_EnterpriseNameofResource" defaultValue="来源公司名称" />", name:"fbk7" , width:100, align:"center", renderer: initCommunicationCol},
+	                { title:"<i18n:I18n key="i18n_label_public" defaultValue="是否公开" />", name:"fbk6" , width:90, align:"center", renderer: initCommunicationCol},
+	                {title:"<i18n:I18n key="i18n_label_remark" defaultValue="备注" />", name:"fbk2", width:300,align:"center", renderer: initCommunicationCol}];
+
+var communicationGrid =  $('#table-communicationInfo').mmGrid({
+    cols: communication_cols,
+    item : [],
+    height:280,
+    checkCol : true,
+    loadingText: '<i18n:I18n key="i18n_common_mmgrid_loadingtext" defaultValue="正在载入" />',
+    noDataText: '<i18n:I18n key="i18n_common_mmgrid_nodatatext" defaultValue="暂无数据" />'
+});
+
+function initCommunicationCol(val, item, index){
+	if(!val) val = "";
+	if(this.name == "fbk6"){
+		var options = "<option value='Y' selected><i18n:I18n key="i18n_common_yes" defaultValue="是"/></option><option value='N'><i18n:I18n key="i18n_common_no" defaultValue="否"/></option>" 	
+		if(val == "N"){
+			options = "<option value='Y'><i18n:I18n key="i18n_common_yes" defaultValue="是"/></option><option value='N' selected><i18n:I18n key="i18n_common_no" defaultValue="否"/></option>" 			
+		}
+		return "<select name='"+this.name+"' "+(item.fbk5 == elsAccount ? '' : 'disabled')+">"+options+"</select>";
+	}
+	if(this.name == "fbk5" || this.name == "fbk7"){
+		 return "<input type='text' name='"+this.name+"' value='"+val+"' readonly='readonly'>";
+	}
+	if(this.name == "fbk1" || this.name == "fbk1"){
+		 return "<input type='text' class='myfbk1' name='"+this.name+"' value='"+val+"'";
+	}
+	var _input  = "<input type='text' name='"+this.name+"' value='"+val+"' readonly='readonly'>";
+	if(item.fbk5 == elsAccount){
+		_input = "<input type='text' name='"+this.name+"' value='"+val+"'>";
+	}
+	return _input;
+}
+
+communicationGrid.on("blur change","input, select",function(){
+	if($(event.target).is("[name='fbk6']")){
+		$(this).closest("tr").data("item")[this.name]  = $(this).find("option:selected").val()
+		return false;
+	}
+	$(this).closest("tr").data("item")[this.name] = this.value;
+})
+
+
+$(".add").on("click", function(){
+	var tabIndex = tabs.tabs('option','selected').active;
+	var item = {elsAccount : elsAccount, fbk5 : elsAccount, fbk7 : companyShortName , fbk6 : "Y"};
+	if(tabIndex == 0){
+		alert('<i18n:I18n key="i18n_lx_editAccount_525_c290ddf6b3774a89860f5880a" defaultValue="此按钮在基本信息下无效"/>',2);
+		return;
+	}
+	if(tabIndex == 1){//银行资料
+		var itemsr = {bankBranchAddress:companyShortName,elsAccount : elsAccount, fbk5 : elsAccount, fbk7 : companyShortName , fbk6 : "Y"};
+		bankGrid.addRow(itemsr);
+	}else if(tabIndex == 2){//认证资料
+	    var fbk45=$("#fbk45").val();
+		var items = {elsAccount : elsAccount, fbk5 : elsAccount, fbk7 : companyShortName , fbk6 : "Y",fbk3:fbk45,fbk9:""};
+		certificateGrid.addRow(items);
+	}else if(tabIndex == 3){//联系人资料
+		contactGrid.addRow(item);
+	}
+});
+
+$(".copy").on("click", function(){
+	var tabIndex = tabs.tabs('option','selected').active;
+	if(tabIndex == 0){
+		alert('<i18n:I18n key="i18n_lx_editAccount_525_c290ddf6b3774a89860f5880a" defaultValue="此按钮在基本信息下无效"/>',2);
+		return;
+	}
+	if(tabIndex == 1){//银行资料
+		var selected = bankGrid.selectedRows();
+		if(selected.length <= 0){
+			alert("<i18n:I18n key="i18n_delivery_chooseitemtocopy" defaultValue="请选择要复制的行"/>!",2);
+			return;
+		}
+		bankGrid.addRow($.extend({}, selected[0],{fbk5 : elsAccount, fbk7 : companyShortName , fbk6 : "Y"}));
+	}else if(tabIndex == 2){//认证资料
+		var selected = certificateGrid.selectedRows();
+		if(selected.length <= 0){
+			alert("<i18n:I18n key="i18n_delivery_chooseitemtocopy" defaultValue="请选择要复制的行"/>!",2);
+			return;
+		}
+		certificateGrid.addRow($.extend({}, selected[0],{fbk5 : elsAccount,fbk7 : companyShortName , fbk6 : "Y"}));
+	}else if(tabIndex == 3){//联系人资料
+		var selected = contactGrid.selectedRows();
+		if(selected.length <= 0){
+			alert("<i18n:I18n key="i18n_delivery_chooseitemtocopy" defaultValue="请选择要复制的行"/>!",2);
+			return;
+		}
+		contactGrid.addRow($.extend({}, selected[0],{fbk5 : elsAccount, fbk7 : companyShortName , fbk6 : "Y"}));
+	}
+})
+
+
+$("#updateBtn").on("click", function(){
+	parent.elsDeskTop.tip.init({type:"confirm",message:"<i18n:I18n key="i18n_label_GetUpdates" defaultValue="确定要获取更新吗"/>?", closeEvent:function(){
+		parent.elsDeskTop.showLoading("<i18n:I18n key="i18n_label_update_data" defaultValue="更新主数据中"/>");
+		$.ajax({
+			url: "<%=basePath%>rest/SupplierMainDataService/syncEnterpriseExtendByFriend/"+elsAccount,
+			type: "GET",			
+			success: function(data) {
+				parent.elsDeskTop.hideLoading();
+				alert('<i18n:I18n key="i18n_personal_update" defaultValue="获取更新成功"/>!',1);
+				window.location.reload();
+			}
+		});
+	}})
+})
+
+$(".del").on("click", function(){
+	var tabIndex = tabs.tabs('option','selected').active;
+	if(tabIndex == 0){
+		alert('<i18n:I18n key="i18n_lx_editAccount_525_c290ddf6b3774a89860f5880a" defaultValue="此按钮在基本信息下无效"/>',2);
+		return;
+	}
+	if(tabIndex == 1){//银行资料
+		var indexs = bankGrid.selectedRowsIndex();
+		if(indexs.length <= 0){
+			alert("<i18n:I18n key="i18n_permission_selectitemstodelete" defaultValue="请选择要删除的行"/>!",2);
+			return;
+		}
+		bankGrid.removeRow(indexs);
+	}else if(tabIndex == 2){//认证资料
+		var indexs = certificateGrid.selectedRowsIndex();
+		if(indexs.length <= 0){
+			alert("<i18n:I18n key="i18n_permission_selectitemstodelete" defaultValue="请选择要删除的行"/>!",2);
+			return;
+		}
+		var string=certificateGrid.selectedRows();
+		var fbk3=string[0].fbk3;
+		var certificateType  =string[0].certificateType
+		var data = {"fbk2":certificateType,"fbk3":fbk3,"elsAccount":elsAccount};
+		 $.ajax({
+				url :"<%=basePath%>rest/AccountService/deleteAdmittanceAction",
+				type :"POST",
+				contentType : "application/json",
+				data : JSON.stringify(data),
+				dataType : "json",
+				success : function(data) {
+					alert('<i18n:I18n key="i18n_common_alert_deletesuccess" defaultValue="删除成功" />');
+					query();
+				},
+				error : function(data) {
+					alert('<i18n:I18n key="i18n_common_alert_requestfail" defaultValue="请求出错" />',3);
+				}
+			});
+		 certificateGrid.removeRow(indexs);
+	}else if(tabIndex == 3){//联系人资料
+		var indexs = contactGrid.selectedRowsIndex();
+		if(indexs.length <= 0){
+			alert("<i18n:I18n key="i18n_permission_selectitemstodelete" defaultValue="请选择要删除的行"/>!",2);
+			return;
+		}
+		contactGrid.removeRow(indexs);
+	}
+});
+
+var checkObj = {
+	bankAccount  : ["input[name='bankAccount']", "empty", "<i18n:I18n key="i18n_label_bankcannotbeempty" defaultValue="银行账号不能为空"/>!"],
+	bankAccountName : ["input[name='bankAccountName']", "empty", "<i18n:I18n key="i18n_label_bankNamecannotbeempty" defaultValue="银行用户名不能为空"/>"],
+	detailedAddress : ["input[name='detailedAddress'","empty","<i18n:I18n key="i18n_label_Addresscannotbeempty" defaultValue="详细地址不能空"/>!"],
+	certificateNumber : ["input[name='certificateNumber']","empty","<i18n:I18n key="i18n_label_CertificateNumbercannotbeempty" defaultValue="证书编号不能为空"/>!"],
+	agencyName : ["input[name='agencyName']","empty","<i18n:I18n key="i18n_label_CertificateAuthorityCNN" defaultValue="认证机构不能为空"/>!"],
+	validBeginTime : ["input[name='validBeginTime']", "empty", "<i18n:I18n key="i18n_label_EffectiveDateCNN" defaultValue="证书生效日期不能为空"/>!"],
+	validEndTime   : ["input[name='validEndTime']","empty", "<i18n:I18n key="i18n_label_ExpirationDateCNN" defaultValue="证书失效日期不能为空"/>!"],
+	contactRole  : ["input[name='contactRole']","empty","<i18n:I18n key="i18n_label_ContactfunctionCNN" defaultValue="联系人职能不能为空"/>!"],
+	contactPosition : ["input[name='contactPosition']", "empty", "<i18n:I18n key="i18n_label_ContactpositionCNN" defaultValue="联系人职位不能为空"/>!"],
+	contactName  : ["input[name='contactName']", "empty", "<i18n:I18n key="i18n_label_ContactNameCNN" defaultValue="联系人姓名不能为空"/>!"],
+	mobile  : ["input[name='mobile']", "empty", "<i18n:I18n key="i18n_label_ContactiphoneCNN" defaultValue="联系人手机号不能为空"/>!"],
+	fullName : ["input[name='fullName']", "empty","<i18n:I18n key="i18n_label_fullnameCNN" defaultValue="企业全称不能为空"/>" ],
+	shortName : ["input[name='shortName']", "empty", "<i18n:I18n key="i18n_label_enterpriseCNN" defaultValue="企业简称不能为空"/>"],
+	telphone : ["input[name='telphone']", "isMobile", "<i18n:I18n key="i18n_label_enterprisebasicCNN" defaultValue="企业基本信息中的手机号码为空或者格式不正确"/>"],
+	salePerson : ["#salePerson", "empty","<i18n:I18n key="i18n_label_salespersonCNN" defaultValue="销售负责人不能为空"/>!"],
+	saleMobile : ["#saleMobile", "isMobile","<i18n:I18n key="i18n_label_salespersonCNN1" defaultValue="销售负责人电话号码格式不正确或者为空"/>!"],
+	saleMail  : ["#saleMail", "isEmail", "<i18n:I18n key="i18n_label_salespersonCNN2" defaultValue="销售负责人邮箱不能为空或格式不正确"/>!"],
+	financePerson : ["#financePerson", "empty", "<i18n:I18n key="i18n_label_treasurercnn" defaultValue="财务负责人不能为空"/>!" ],
+	financeMobile : ["#financeMobile", "isMobile", "<i18n:I18n key="i18n_label_financeCNN" defaultValue="财务负责人电话号码格式不正确或者为空"/>!"],
+	financeMail : ["#financeMail", "isEmail", "<i18n:I18n key="i18n_label_financialCNN" defaultValue="财务负责人邮箱格式不正确或者为空"/>!"],
+	enterprisePerson : ["#enterprisePerson","empty", "<i18n:I18n key="i18n_label_headCNN" defaultValue="企业负责人不能为空"/>!" ],
+	enterpriseMobile : ["#enterpriseMobile", "isMobile", "<i18n:I18n key="i18n_label_businessCNN" defaultValue="企业负责人电话号码格式不正确或为空"/>!"],
+	enterpriseMail : ["#enterpriseMail", "isEmail", "<i18n:I18n key="i18n_label_emailformat" defaultValue="企业负责人邮箱格式不正确或者为空"/>"],
+	email : ["#email","isEmail","<i18n:I18n key="i18n_dzyxgsbzq3" defaultValue="电子邮箱格式不正确！" />"]
+};
+
+ 
+
+
+$("#saveBtn").on("click", function(){
+    // 判断手机号码 正则验证
+	var mobileReg = /^1[345678]\d{9}$/;
+	//var mobileReg = /^[0-9]+.?[0-9]*$/;
+	var mobile = document.getElementsByClassName('SJHM');
+	if(mobile!=null){
+        //不能使用 for in 遍历，会多出一个mobile[length]为"undefined"的对象，不是使用forEach() 因为IE不支持
+        for(var mobileindex=0;mobileindex<mobile.length;mobileindex++){
+            if(mobile[mobileindex].value== null || mobile[mobileindex].value== "undefined" || mobile[mobileindex].value== "" ){
+                alert('<i18n:I18n key="i18n_lx_editAccount_668_fe11cc5e5654425c83897fe02" defaultValue="手机号码不能为空!"/>',2);
+                return
+            }
+            if(!mobileReg.test(mobile[mobileindex].value)){
+                alert('<i18n:I18n key="i18n_lx_editAccount_672_9dfa68b98a3c40318269923c3" defaultValue="手机号码输入不正确!"/>',2);
+                return
+            }
+        }
+	}
+	var telReg = new RegExp(/^\d{3}-\d{7,8}|\d{4}-\d{7,8}$/);
+	var telNumber = $("#fbk34").val();
+	if(telNumber && !telReg.test(telNumber)){
+		alert("请输入正确的固话号码",2);
+		return;
+	}
+	/* var email = $('#email').val();
+	if(!email) {
+	    alert('<i18n:I18n key="i18n_lx_editAccount_679_fd71a0130ee743f2995ad3bff" defaultValue="电子邮箱不能为空!"/>', 2);
+	    return;
+	} */
+	var emailRows = [];
+    var regEmail = new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$");
+    var row = 0;
+    $('#table-contactInfo').find('input[name="email"]').each(function () {
+        row++;
+		var emailConTact = $(this).val();
+		if (emailConTact && !regEmail.test(emailConTact)) {
+			emailRows.push(row);
+		}
+    });
+    if (emailRows.length > 0) {
+        alert('<i18n:I18n key="i18n_lx_editAccount_693_15c0031865634ee59b9bdb81e" defaultValue="联系人资料中"/>' +'<i18n:I18n key="i18n_refund_at" defaultValue="第"/>'+ emailRows +'<i18n:I18n key="i18n_label_line" defaultValue="行"/>'+ '<i18n:I18n key="i18n_personal_email_format_require" defaultValue="邮箱格式不正确"/>', 2);
+        return;
+	}
+
+	if(validForm(checkObj)) return;
+	var bankInfo = bankGrid.rowsLength() > 0 ? bankGrid.rows() : [];
+	var communicationInfo = communicationGrid.rowsLength() > 0 ? communicationGrid.rows() : [];
+	var certificateInfo = certificateGrid.rowsLength() > 0 ? certificateGrid.rows() : [];
+	var contactInfo  = contactGrid.rowsLength() > 0 ? contactGrid.rows() : [];
+	for(var i=0;i<contactInfo.length;i++){
+		var QQ = $(".myFBK1QQ").eq(i).val();
+		var QQReg = /^[1-9][0-9]{4,10}$/;
+		var reg = /^[0-9]*$/;
+		if(QQ!=null){
+			if(!QQReg.test(QQ)||!reg.test(QQ)){
+				alert('<i18n:I18n key="i18n_lx_editAccount_708_b8146b234d084d31a8ffc3151" defaultValue="QQ号码输入不正确"/>',2);
+				return;
+			}
+		}
+	}
+	for(var i=0;i<bankInfo.length;i++){
+		var bankAccount = $(".myBankAccount").eq(i).val();
+		var reg = /^[0-9]*$/;
+		if(bankAccount!=null){
+			if(!reg.test(bankAccount)){
+				alert('<i18n:I18n key="i18n_lx_editAccount_718_518ad46218284007b9a304613" defaultValue="银行账号输入不正确"/>',2);
+				return;
+			}
+		}
+	}
+	for(var i=0;i<communicationInfo.length;i++){
+		var myfbk1 = $(".myfbk1").eq(i).val();
+		var reg = /^[0-9]*$/;
+		if(myfbk1!=null){
+			if(!reg.test(myfbk1)){
+				alert('<i18n:I18n key="i18n_lx_editAccount_728_c9437f20c1c7402096376aeae" defaultValue="邮编输入不正确"/>',2);
+				return;
+			}
+		}
+	}
+	
+	//企业基本信息
+	$("#countryCode").val($("#country").val());
+	$("#provinceCode").val($("#province").val());
+	$("#cityCode").val($("#city").val());
+	var enterpriseVO = $("#enterpriseInfo").find("select,radio,input,textarea").serializeJSON();
+	
+	if(enterpriseVO.fbk21 == "0" && !enterpriseVO.fbk16){
+		alert("<i18n:I18n key="i18n_label_socialCNN" defaultValue="统一社会信用代码不能为空"/>!",2);
+		return false;
+	}
+	if(enterpriseVO.fbk21 == "1" && ( !enterpriseVO.revenueEnrolPlace || !enterpriseVO.organizationNo || !enterpriseVO.businessLicence) ){
+		alert("<i18n:I18n key="i18n_label_All" defaultValue="税务登记号、组织机构码、营业执照不能为空"/>",2);
+		return false;
+	}
+	var fbk45=$("#fbk45").val();
+	enterpriseVO.contactInfoVO.elsAccount = enterpriseVO.elsAccount;
+	var enterpriseInfo = {
+			elsAccount : elsAccount , 
+			bankInfo : JSON.stringify( bankInfo ),
+			communicationInfo : JSON.stringify ( communicationInfo ),
+			contactInfo : JSON.stringify ( contactInfo ),
+			certificateInfo : JSON.stringify ( certificateInfo ),
+			enterpriseVO : enterpriseVO
+		};
+	enterpriseInfo.fbk1=fbk45;
+	if(enterpriseInfo.enterpriseVO.fbk42=="待审核"){
+		enterpriseInfo.enterpriseVO.fbk42="0";
+	}else if(enterpriseInfo.enterpriseVO=="待准入"){
+		enterpriseInfo.enterpriseVO.fbk42="1";
+	}else if(enterpriseInfo.enterpriseVO=="准入中"){
+		enterpriseInfo.enterpriseVO.fbk42="2";
+	}else if(enterpriseInfo.enterpriseVO=="准入失败"){
+		enterpriseInfo.enterpriseVO.fbk42="3";
+	}else if(enterpriseInfo.enterpriseVO=="已拒绝"){
+		enterpriseInfo.enterpriseVO.fbk42="4";
+	}
+	debugger;
+	parent.elsDeskTop.tip.init({type:'confirm',message : '<i18n:I18n defaultValue="确定要保存吗?" key="i18n_common_cofirm_editRow"></i18n:I18n>' ,closeEvent : function(){
+		parent.elsDeskTop.showLoading("<i18n:I18n defaultValue="正在保存" key="i18n_alert_saving"/>")
+		$.ajax({
+			url : "<%=basePath%>rest/SupplierMainDataService/updateSupplierToPurchase",
+			type : "POST",
+			contentType : "application/json",
+			data : JSON.stringify(enterpriseInfo),
+			success: function(data){
+				parent.elsDeskTop.hideLoading()
+				alert("<i18n:I18n defaultValue="企业信息保存成功" key="i18n_common_alert_savesuccess"/>!");
+				window.location.reload();
+			}
+		})
+	}})
+
+})
+
+/************************************企业基本信息****************start************************************/
+
+var afterRender = function(){this.value=''};
+
+function showIndustry(industry) {
+	var industryValue=industry.split("_");
+	$.ajax({
+		url : "<%=basePath%>rest/BaseInfoService/industrys/" + industryValue[0],
+		type : "GET",
+		async:false,
+		contentType : "application/json",
+		dataType : "json",
+		success : function(data) {
+			var industryDetail = $("#secondIndustry");
+			industryDetail.empty();
+			industryDetail.append($("<option>").text('ALL_<i18n:I18n defaultValue="行业细类" key="i18n_account_title_industrySubdivision"/>').val(''));
+			for (var i = 0; i < data.length; i++) {
+				var option = $("<option>").text(data[i].mc).val(data[i].id+"_"+data[i].mc);
+				industryDetail.append(option);
+			}
+		}
+	});
+}
+
+
+var areaApi={
+		country:"rest/BaseInfoService/findAllCountry",
+		province:"rest/BaseInfoService/provices/",
+		city:"rest/BaseInfoService/citys/"
+};
+	
+var getAreaBy = function(name,param){
+	return ajaxWorker(areaApi[name]+(param||''),{
+		type: "GET",
+		contentType: "application/json",
+		dataType: "json"
+	})
+};
+
+$(function(){
+	country = document.querySelector('#country');
+	province = document.querySelector('#province');
+	city = document.querySelector('#city');
+	country.kName  = 'gj';
+	province.kName = 'aj';
+	city.kName='ct';
+	country.vName = province.vName = city.vName='mc';
+	country.data=[{mc:'<i18n:I18n key="i18n_lable_choose_country" defaultValue="请选择国家"/>',gj:''}];
+
+	country.afterRender=afterRender;
+	province.afterRender=afterRender;
+	city.afterRender=afterRender;
+
+	city.handler = function(d){
+		if(d.aj)d.ct = (d.aj+'_'+ d.mc).replace(/^\s+|\s+$/,'');
+	};
+	country.onchange = function(){
+		province.data=[{mc:'<i18n:I18n key="i18n_lable_choose_province" defaultValue="请选择省份"/>',aj:''}];
+		getAreaBy('province',this.value).done(function(data){
+			if(Array.isArray(data)){
+				province.data = province.data.concat(data);
+			}
+		})
+	};
+	province.onchange = function(){
+		city.data=[{mc:'<i18n:I18n key="i18n_lable_choose_city" defaultValue="请选择城市"/>',ct:''}];
+		getAreaBy('city',this.value).done(function(data){
+			if(Array.isArray(data)){
+				city.data = city.data.concat(data);
+			}
+		})
+	};
+
+	getAreaBy('country').done(function(data){
+		if(Array.isArray(data)){
+			country.data=country.data.concat(data);
+		}
+	});
+	
+	$.ajax({
+		url : "<%=basePath%>rest/BaseInfoService/findAllIndustry",
+		type : "GET",
+		contentType : "application/json",
+		dataType : "json",
+		async:false,
+		success : function(data) {
+			var industry = $("#industry");
+			industry.empty();
+			industry.append($("<option>").text('ALL_<i18n:I18n defaultValue="行业" key="i18n_account_title_industry"/>').val(''));
+			for (var i = 0; i < data.length; i++) {
+				var option = $("<option>").text(data[i].mc).val(data[i].aj+"_"+data[i].mc);
+				industry.append(option);
+			}
+		}
+	});
+	$("#industry").change(function(e) {
+		showIndustry($(this).val());
+	});
+	
+	initEnterpriseInfo();
+	initEnterpriseExtend();
+});
+
+
+//根据els号初始化 企业信息 
+function initEnterpriseInfo(){
+	$.ajax({
+		url: "<%=basePath%>rest/AccountService/queryPurchaseEnquirySupplyByCondtion",
+		type: "POST",
+		contentType: "application/json",
+		dataType: "json",
+		data:JSON.stringify({"elsAccount":elsAccount}),
+		success: function(data) {
+			if(data.fbk45=="" || data.fbk45==null){
+				/* $("#certificateInfoTable").show(); */
+				if(data.fbk2=="purchase"){
+					$("#count").hide();
+					$("#counts").hide();
+					$("#certificateInfoTable").hide();
+				}else{
+					$("#count").show();
+					$("#counts").hide();
+					$("#certificateInfoTable").hide();
+				}
+			}else{
+				if(data.fbk2=="purchase"){
+					/* $("#count").hide();
+					$("#certificateInfoTable").hide(); */
+					$("#count").hide();
+					$("#counts").hide();
+					$("#certificateInfoTable").hide();
+				}else{
+					$("#count").show();
+					$("#counts").hide();
+					$("#certificateInfoTable").show();
+				}
+			}
+			var firstLoad = function(c,k){
+				var fix = function(v){
+					if(k!=='city'){
+						v=v.replace(/(.*?)_.*/,'$1');
+					}
+					return v;
+				}
+				if(data[k]) {
+					var v = fix(data[k]);
+					if(v)c.afterRender = function(){
+						if(this.data.length>1){
+							this.value = v;
+							this.afterRender = afterRender;
+						}
+					};
+					c.value=v
+				}
+			};
+			 $("#enterpriseInfo").find("input,textarea").each(function(){
+				 if(/.+\[.+\]$/.test(this.name) && data["contactInfoVO"]){
+					 var _value = data["contactInfoVO"][/\[(.+)\]$/.exec(this.name)[1]];
+					 if(this.type == "radio"){
+						 this.checked = this.value == _value ? true : false;
+						 return true;
+					 }
+					 this.value = _value || "";
+					 return true;
+				 }
+				 this.value = data[this.name] || "";
+			 })
+			 
+			firstLoad(country,'countryCode');
+			firstLoad(province,'province');
+			firstLoad(city,'city');
+			//初始化是否三证合一
+			$("#fbk21").val(data.fbk21 || "0");
+			//初始化行业
+			 var industryValue = data.industry;
+			 if(industryValue){
+				 $("#industry").find("option[value*='"+industryValue.split("_")[0]+"']").attr("selected",true);
+				 showIndustry(industryValue);
+			 }
+			 var secondIndustryValue = data.secondIndustry;
+			 if(secondIndustryValue){
+				 $("#secondIndustry").find("option[value*='"+secondIndustryValue.split("_")[0]+"']").attr("selected",true);
+			 }
+			//初始化附件按钮
+			 if(data["revenueEnrolFile"] != '' && data["revenueEnrolFile"] != null)
+			 	$("#revenueEnrolFileUpload").text("<i18n:I18n key="i18n_label_uploaded" defaultValue="已上传"/>").css({color:'blue'});
+			 if(data["organizationFile"] != '' && data["organizationFile"] != null)
+			 	$("#organizationFileUpload").text("<i18n:I18n key="i18n_label_uploaded" defaultValue="已上传"/>").css({color:'blue'});
+			 if(data["businessLicenceFile"] != '' && data["businessLicenceFile"] != null)
+			 	$("#businessLicenceFileUpload").text("<i18n:I18n key="i18n_label_uploaded" defaultValue="已上传"/>").css({color:'blue'});
+			 //处理logo图片 @authoer jiangzhidong 20151215
+			 var fbk1 = data["logo"];
+			 if (fbk1==null||fbk1==undefined||fbk1=="") {}{
+			 	<%-- $("#logoImage").attr("src",'<%=basePath%>icon/els-icon.png'); --%>
+			 	$("#logoImage").attr('src',location.href.match(/https?:\/\/.*?\//)[0]+('opt/nfsshare/'+fbk1||"icon/icon1.png"));
+			 } 
+				if(data.fbk42==0){
+					$("#fbk42").val("待审核");
+				}else if(data.fbk42==1){
+					$("#fbk42").val("待准入")
+				}else if(data.fbk42==2){
+					$("#fbk42").val("准入中")
+				}else if(data.fbk42==3){
+					$("#fbk42").val("准入失败")
+				}else if(data.fbk42==4){
+					$("#fbk42").val("已拒绝")
+				}
+		}
+	});
+}
+
+//文件上载初始化
+var fileUploader;
+function initFileUploader(){
+    //新增表单文件
+    if (fileUploader) {
+    	return;
+    }
+    fileUploader = WebUploader.create({
+  	    swf: '<%=basePath%>jsLib/webuploader/Uploader.swf',
+  	    auto: false,
+  	    server: '<%=basePath%>servlet/UploadServlet',
+  	    pick: '#btnFileUpload',
+  	    resize: false,
+  	    formData: {
+	     	elsAccount : elsAccount
+	     }
+  	});
+  	
+  	fileUploader.on( 'uploadSuccess', function( obj, response ) {
+  	   var filePath = response.url;
+       $("#filePath").val(filePath);
+       var uploadId = ($("#addFileDialog").data("uploadId") || "");
+       $("#"+uploadId.replace("Upload","")).val(filePath);
+       if(uploadId == "logoUpload"){ //logo上传   
+    	   getEnterpriseLogo(filePath);
+       }
+       $("#"+uploadId).text('<i18n:I18n key="i18n_label_uploaded" defaultValue="已上传"/>').css('color','blue'); 
+       $("#addFileDialog").hide(); //上传结束后隐藏窗口
+  	});
+  	
+  	fileUploader.on("beforeFileQueued", function(){
+  		fileUploader.reset();
+  		return true;
+  	})
+  	
+    // 当有文件添加进来的时候
+	fileUploader.on("fileQueued",function(file){
+		clearFileInfo();
+		var fileName = file.name;
+		$("#fileName").val(file.name);
+	});
+    //文件上传进度条
+	fileUploader.on( 'uploadProgress', function( file, percentage ) {
+	    $("#progress").css( 'width', percentage * 100 + '%' ).text(parseInt(percentage * 100) + '%');
+	});
+    
+}
+
+function clearFileInfo(){
+	$("#fileName").val("");
+	$("#filePath").val("");
+	$("#progress").css( 'width',  '0%' ).text( '0%');
+}
+
+//开始上传
+$("#addFileBtnOK").click(function(){
+	fileUploader.upload();
+});
+
+//关闭按钮处理
+$("#dialogFileClose").click(function(){
+	$("#addFileDialog").hide();
+});
+
+
+//税务登记处,组织机构码,营业执照,企业LOGO上传
+$('.uploadFileBtn').live("click", function(){
+// 	debugger
+// 	var uploadId = $(this).attr("id");
+// 	initPlupload(elsAccount,function(file,filePath){
+// 		var fileName = file.name;
+// 		var filePath = filePath; 	
+// 		debugger
+// 		//上传成功后，修改相应的数据
+// 	    $("#filePath").val(filePath);
+// 	  //  var uploadId = ($("#addFileDialog").data("uploadId") || "");
+// 	    $("#"+uploadId.replace("Upload","")).val(filePath);
+// 	    if(uploadId == "logoUpload"){ //logo上传   
+// 	    	  getEnterpriseLogo(filePath);
+// 	    		return;
+// 	      }
+// 	    $("#"+uploadId).text("<i18n:I18n key="i18n_label_uploaded" defaultValue="已上传"/>").css('color','blue'); 
+// 	}); 
+     initFileUploader();
+     clearFileInfo();
+    $("#addFileDialog").show().data("uploadId",this.id);
+});
+
+
+$("#revenueEnrolFilebtn").click(function(){
+	var filePaths = $("#revenueEnrolFile").val();
+	if(filePaths==''||filePaths==null){
+		alert('<i18n:I18n key="i18n_label_attachment" defaultValue="附件为空,不能下载"/>!',2);
+ 		return;
+	}
+	download({filePath : filePaths});
+ });
+
+$("#organizationFilebtn").click(function(){
+	var filePaths = $("#organizationFile").val();
+	if(filePaths==''||filePaths==null){
+		alert('<i18n:I18n key="i18n_label_attachment" defaultValue="附件为空,不能下载"/>!',2);
+ 		return;
+	}
+	download({filePath : filePaths});
+});
+
+$("#businessLicenceFilebtn").click(function(){
+	var filePaths = $("#businessLicenceFile").val();
+	if(filePaths==''||filePaths==null){
+		alert('<i18n:I18n key="i18n_label_attachment" defaultValue="附件为空,不能下载"/>!',2);
+ 		return;
+	}
+	download({filePath : filePaths});
+});
+
+//处理图片URL
+function getEnterpriseLogo(logoURL){
+	$.ajax({
+		url: "<%=basePath%>rest/AccountService/doLogoURL?logoURL="+logoURL,
+		type: "POST",
+		contentType: "application/json",
+		dataType: "text",
+		success: function(data) {
+	  			fbk1 = data;
+	  			//处理logo图片 @authoer jiangzhidong 20151215
+	  			if(fbk1!=null&&fbk1!=""){
+			 		var basePath = '<%=basePath%>';
+			 		var path = '<%=path%>';
+				 	var pathNum = basePath.lastIndexOf(path);
+				 	logoPath = basePath.substring(0, pathNum);
+				 	//windows
+				 	fbk1 = fbk1.substring(fbk1.lastIndexOf(':')+1);
+				 	$("#logoImage").attr("src",logoPath+fbk1);
+				 	//linux
+				 	//$("#logoImage").attr("src",logoPath+fbk1);
+		  		}
+		}
+	});
+}
+$("#queryProject2").click(function(){
+	//兼容ie 冒泡事件
+	if (event && event.preventDefault) {
+        event.preventDefault();
+        event.stopPropagation();
+    } else {
+        window.event.returnValue = false;
+    }
+	var getData = function(data) {
+		projectNameCallbacks(data);
+	};
+    parent.elsDeskTop.defineWin({
+        'iconSrc':'icon/els-icon.png',
+        'windowsId':'editSupplierCategory1',
+        'windowTitle':'<i18n:I18n key="" defaultValue="关联供应商" />',
+        'iframSrc':'${pageContext.request.contextPath}/account/projectPurchaseorderCheck.jsp',
+        'windowWidth':400,
+        'windowHeight':500,
+        'windowStatus':'maximized',
+        'parentPanel':"currDesktop",
+        data: getData
+    });
+});
+function projectNameCallbacks(dataRows){
+	for(var i=0;i<dataRows.length;i++){
+		$("#fbk45").val(dataRows[i].supplierTypeName);
+		$("#fbk46").val(dataRows[i].supplierTypeNumber);
+		//projectNumber
+		/* if(dataRows[i].supplierTypeName && dataRows[i].supplierTypeName.length>0){
+			$("#certificateInfoTable").show();
+		}else{
+			$("#certificateInfoTable").hide();
+		} */
+	}
+} 
+/************************************企业基本信息*************end***************************************/
+function resizeEvt(){
+	var myEvt=new Event('resize');
+	window.dispatchEvent(myEvt);
+}
+function paymentList (rowIndex){
+	if (event && event.preventDefault) {
+        event.preventDefault();
+        event.stopPropagation();
+    } else {
+        window.event.returnValue = false;
+    }
+	//var rowIndex=ui.rowIndx;
+	var getData = function(data) {
+		projectNameCallPaymentList(data,rowIndex);
+	};
+    parent.elsDeskTop.defineWin({
+        'iconSrc':'icon/els-icon.png',
+        'windowsId':'editSupplierCategory2',
+        'windowTitle':'<i18n:I18n key="" defaultValue="关联" />',
+        'iframSrc':'${pageContext.request.contextPath}/account/projectList.jsp',
+        'windowWidth':800,
+        'windowHeight':1000,
+        'parentPanel':"currDesktop",
+        data: getData
+    });
+}
+function projectNameCallPaymentList(dataRows,rowIndex){
+	if("undefined"!=typeof(dataRows) && dataRows.length > 0){
+		var indexs = bankGrid.rows();
+        var data = {
+        		//li
+        		countryName : indexs[rowIndex].countryName,
+        		bankName : indexs[rowIndex].bankName,
+        		bankAccount : indexs[rowIndex].bankAccount,
+        		bankBranchAddress : indexs[rowIndex].bankBranchAddress,
+        		bankAccountName : indexs[rowIndex].bankAccountName,
+        		fbk5 : indexs[rowIndex].fbk5,
+        		fbk7 : indexs[rowIndex].fbk7,
+        		fbk6 : indexs[rowIndex].fbk6,
+        		fbk11 : dataRows[0].fieldValue,
+		    }; 
+        bankGrid.updateRow(data,rowIndex);
+        for(var i=1; i<dataRows.length; i++) {
+        	var data = {
+        			fbk11 : dataRows[i].fieldValue,
+			    }; 
+        	bankGrid.addRow(data,++rowIndex);//插入到表格最后
+        }
+    }
+}
+function countryName (rowIndex){
+	if (event && event.preventDefault) {
+        event.preventDefault();
+        event.stopPropagation();
+    } else {
+        window.event.returnValue = false;
+    }
+	//var rowIndex=ui.rowIndx;
+	var getData = function(data) {
+		projectNameCallFbk10(data,rowIndex);
+	};
+    parent.elsDeskTop.defineWin({
+        'iconSrc':'icon/els-icon.png',
+        'windowsId':'editSupplierCategory2',
+        'windowTitle':'<i18n:I18n key="" defaultValue="关联" />',
+        'iframSrc':'${pageContext.request.contextPath}/account/projectLists.jsp',
+        'windowWidth':800,
+        'windowHeight':1000,
+        'parentPanel':"currDesktop",
+        data: getData
+    });
+}
+function projectNameCallFbk10(dataRows,rowIndex){
+	if("undefined"!=typeof(dataRows) && dataRows.length > 0){
+		var indexs = bankGrid.rows();
+        var data = {
+        		fbk11 : indexs[rowIndex].fbk11,
+        		bankName : indexs[rowIndex].bankName,
+        		bankAccount : indexs[rowIndex].bankAccount,
+        		bankBranchAddress : indexs[rowIndex].bankBranchAddress,
+        		bankAccountName : indexs[rowIndex].bankAccountName,
+        		fbk5 : indexs[rowIndex].fbk5,
+        		fbk7 : indexs[rowIndex].fbk7,
+        		fbk6 : indexs[rowIndex].fbk6,
+        		countryName : dataRows[0].fieldValue,
+		    }; 
+        bankGrid.updateRow(data,rowIndex);
+        for(var i=1; i<dataRows.length; i++) {
+        	var data = {
+        			fbk11 : dataRows[i].fieldValue,
+			    }; 
+        	bankGrid.addRow(data,++rowIndex);//插入到表格最后
+        }
+    }
+}
+</script>
+
+</body>
+</html>
